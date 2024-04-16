@@ -1,10 +1,15 @@
 ﻿
 @model Pie
+<div class="row">
 <div class="col">
     <div class="card pie-card">
         <img src="@Model.ImageThumbnailUrl" class="card-img-top" alt="@Model.Name">
         <div class="card-body pie-button">
             <h4 class="d-grid">
+                <a class="btn btn-secondary"
+                asp-controller="ShoppingCart"
+                asp-action="AddToShoppingCart"
+                asp-route-pieId="@Model.PieId">+Add to Cart</a>
             </h4>
 
             <div class="d-flex justify-content-between mt-2">
@@ -20,4 +25,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

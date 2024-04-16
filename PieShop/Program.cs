@@ -11,6 +11,10 @@ builder.Services.AddDbContext<PieShopDbContext>(options =>
 {
     options.UseSqlServer(ConnectionStrings);
 });
+//Invoke the GetCard method
+builder.Services.AddScoped<IShoppingCart, ShoppingCart>(sp => ShoppingCart.GetCart(sp));
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
@@ -20,6 +24,8 @@ if (app.Environment.IsDevelopment())
 {
 app.UseDeveloperExceptionPage();
 }
+
+app.UseSession();
 app.MapDefaultControllerRoute();
 
 
