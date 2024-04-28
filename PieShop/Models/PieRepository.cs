@@ -4,8 +4,8 @@ namespace PieShop.Models
 {
     public class PieRepository:IPieRepository
     {
-        private PieShopDbContext _pieShopDbContext;
 
+        private PieShopDbContext _pieShopDbContext;
         public PieRepository(PieShopDbContext pieShopDbContext) 
         {
         _pieShopDbContext = pieShopDbContext;
@@ -26,6 +26,11 @@ namespace PieShop.Models
         public Pie? GetPieById (int pieId)
         {
             return _pieShopDbContext.pies.FirstOrDefault(p => p.PieId == pieId);
+        }
+
+        public IEnumerable<Pie> SearchPies(string searchQuery)
+        {
+            return _pieShopDbContext.pies.Where(p => p.Name.Contains(searchQuery));
         }
     }
 }
