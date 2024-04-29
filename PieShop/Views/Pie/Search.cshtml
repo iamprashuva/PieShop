@@ -7,35 +7,38 @@
     <button id="searchButton" class="btn btn-secondary">Search</button>
 </div>
 <table id="tblPies" cellpadding="0" cellspacing="0">
- <tbody>
-
- </tbody>
+ <tbody></tbody>
 </table>
 
+
 <script type="text/javascript">
+
     $(document).ready(function () {
         $("button").click(function () {
-            var searchQuery = $.trim($(#txtPieName).val());
-            $("tbody").html(""); //Remove everything that may be in tbody
+            var searchQuery = $.trim($("#txtPieName").val());
+            $("table tbody").html(""); //remove everything if already exist
             $.ajax({
                 type: "POST",
                 url: "/api/Search",
                 data: "\"" + searchQuery + "\"",
-                contentType: "application/json; <meta charset=utf-8",
+                contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (pies) {
+                    var table = $("#tblPies");
+                    table.find("tr:not(:first)").remove();
                     $.each(pies, function (i, pie) {
                         $("tbody").append($("<tr>"));
                         appendElement = $("tbody tr").last();
-                        appendElement.append($("<td>").html('<img src=' + pie.imageThumbnailUrl + 'width= 250 class="rounded m-2">'));
-                        appendElement.append($("<td>").html('<h2><a href = "/pie/details/' + pie.pieId + '"class="pie-link">' + pie.name + '</a></h2>'));
+                        appendElement.append($("<td>").html('<img src=' + pie.imageThumbnailUrl + '>'));
+                        appendElement.append($("<td>").html('<a href="/pie/details/' + pie.pieId + '">' + pie.name + '</a>'));
+                        appendElement.append($("<td>").html(pie.price));
                     });
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr)
                 }
-
             });
         });
     });
+
 </script>
