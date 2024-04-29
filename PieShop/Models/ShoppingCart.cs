@@ -52,7 +52,13 @@ namespace PieShop.Models
 
         public void ClearCart()
         {
-            throw new NotImplementedException();
+            var cartItems = _pieShopDbContext
+               .ShoppingCartItems
+               .Where(cart => cart.ShoppingCartId == ShoppingCartId);
+
+            _pieShopDbContext.ShoppingCartItems.RemoveRange(cartItems);
+
+            _pieShopDbContext.SaveChanges();
         }
 
         public List<ShoppingCartItem> GetShoppingCartItems()

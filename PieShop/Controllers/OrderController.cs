@@ -39,7 +39,7 @@ namespace PieShop.Controllers
 
         public IActionResult CheckoutComplete()
             {
-            ViewBag.CheckoutCompleteMessage = "Thanks for your order.You'll soon enjoy our delicious pies!";
+            ViewBag.CheckoutCompleteMessage = "Thanks for your order. You'll soon enjoy our delicious pies!";
             return View();
         }
     }
