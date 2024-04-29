@@ -11,7 +11,14 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 var ConnectionStrings = builder.Configuration.GetConnectionString("PieShop");
 builder.Services.AddDbContext<PieShopDbContext>(options =>
 {
-    options.UseSqlServer(ConnectionStrings);
+    options.UseSqlServer(ConnectionStrings,
+         sqlServerOptionsAction: sqlOptions =>
+         {
+             sqlOptions.EnableRetryOnFailure(
+                 maxRetryCount: 5, // Adjust the maximum number of retries as needed
+                 maxRetryDelay: TimeSpan.FromSeconds(30), // Adjust the maximum delay between retries as needed
+                 errorNumbersToAdd: null);
+         });
 });
 //Invoke the GetCard method
 builder.Services.AddScoped<IShoppingCart, ShoppingCart>(sp => ShoppingCart.GetCart(sp));
@@ -32,6 +39,7 @@ app.UseDeveloperExceptionPage();
 }
 
 app.UseSession();
+app.UseAuthentication();
 app.MapDefaultControllerRoute();
 
 
