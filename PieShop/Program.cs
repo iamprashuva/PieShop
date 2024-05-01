@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PieShop.Models;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -20,6 +21,9 @@ builder.Services.AddDbContext<PieShopDbContext>(options =>
                  errorNumbersToAdd: null);
          });
 });
+
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddEntityFrameworkStores<PieShopDbContext>();
 //Invoke the GetCard method
 builder.Services.AddScoped<IShoppingCart, ShoppingCart>(sp => ShoppingCart.GetCart(sp));
 builder.Services.AddSession();
@@ -40,9 +44,11 @@ app.UseDeveloperExceptionPage();
 
 app.UseSession();
 app.UseAuthentication();
+app.UseAuthorization();
 app.MapDefaultControllerRoute();
 
 
 DbInitializer.Seed(app);
+app.MapRazorPages();
 
 app.Run();
