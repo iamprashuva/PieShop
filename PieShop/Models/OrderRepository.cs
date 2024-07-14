@@ -12,29 +12,13 @@
         }
 
         public void CreateOrder(Order order)
-        {
-            order.OrderPlaced = DateTime.Now;
+        { 
+                order.OrderPlaced = DateTime.Now;
 
-            List<ShoppingCartItem>? shoppingCartItems = _shoppingCart.ShoppingCartItems;
-            order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
-
-            order.OrderDetails = new List<OrderDetail>();
-
-            foreach (ShoppingCartItem? shoppingCartItem in shoppingCartItems)
-            {
-                var orderDetail = new OrderDetail
-                {
-                    Amount = shoppingCartItem.Amount,
-                    PieId = shoppingCartItem.Pie.PieId,
-                    Price = shoppingCartItem.Pie.Price
-                };
-
-                order.OrderDetails.Add(orderDetail);
-            }
-
-            _pieShopDbContext.Orders.Add(order);
-
-            _pieShopDbContext.SaveChanges();
+                // Save order to database
+                _pieShopDbContext.Orders.Add(order);
+                _pieShopDbContext.SaveChanges();
+            
         }
     }
 }
