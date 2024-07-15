@@ -1,44 +1,31 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet" type="text/css" />
-@*     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
- *@    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/lib/jquery/jquery.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     <script src="~/lib/jquery-validate/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-    <link href="~/css/site.css" rel="stylesheet"/>
+    <link href="~/css/site.css" rel="stylesheet" />
     <base href="/" />
 </head>
 <body>
     <div class="container">
         <header>
-            <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary"
-                 aria-label="Bethany's Pie Shop navigation header">
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary" aria-label="Bethany's Pie Shop navigation header">
                 <div class="container-xl">
                     <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                        <img src="images/bethanys-pie-shop-logo_horiz-white.png" width="151" height="47" class="d-inline-block align-top mb-2 mt-1"
-                             alt="Bethany's Pie Shop Logo">
+                        <img src="images/PieBalls.png" width="auto" height="47" class="d-inline-block align-top mb-2 mt-1" alt="Pie Shop Logo">
                     </a>
-
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
                             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                           @* <li class="nav-link">
-                            <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
-                            </li>
-                            <li class="nav-link">
-                            <a asp-controller="Pie" asp-action="List" class="nav-link">Pies</a>
-                            </li>*@
                             <vc:category-menu></vc:category-menu>
                             <li class="nav-item">
                                 <a asp-controller="Contact" asp-action="Index" class="nav-link">Contact</a>
@@ -54,14 +41,15 @@
                             </li>
                         </ul>
                         <vc:shopping-cart-summary></vc:shopping-cart-summary>
-                        <partial name="_LoginPartial"/>
+                        <partial name="_LoginPartial" />
                     </div>
                 </div>
             </nav>
         </header>
-    <div class="container">
-        @RenderBody()
+        <div class="container mt-4">
+            @RenderBody()
             @RenderSection("Scripts", required: false)
+        </div>
     </div>
 </body>
 </html>
