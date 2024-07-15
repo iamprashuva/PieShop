@@ -1,11 +1,9 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using PieShop.Models;
-using Stripe;
 using Stripe.Checkout;
-using System.Collections.Generic;
+
 
 namespace PieShop.Controllers
 {
@@ -41,25 +39,93 @@ namespace PieShop.Controllers
             if (ModelState.IsValid)
             {
                 // Store order details temporarily
-                TempData["OrderDetails"] = order;
+                TempData["OrderDetails"] = JsonConvert.SerializeObject(order);
 
-                // Clear shopping cart
-                _shoppingCart.ClearCart();
+                // Log for debugging
+                System.Diagnostics.Debug.WriteLine("Redirecting to Payment action");
 
-                return RedirectToAction("Payment");
+                return RedirectToAction("Payment", "Order");
+
+            }
+            // Log ModelState errors
+            var errors = ModelState.Values.SelectMany(v => v.Errors).ToList();
+            foreach (var error in errors)
+            {
+                System.Diagnostics.Debug.WriteLine("ModelState Error: " + error.ErrorMessage);
             }
             return View(order);
         }
-
         [HttpGet]
-       
-        public IActionResult Payment()
+        public IActionResult CheckoutComplete()
+        {
+            var sessionId = TempData["Session"] as string;
+
+            if (string.IsNullOrEmpty(sessionId))
+            {
+                return RedirectToAction("CheckOut");
+            }
+
+            var service = new SessionService();
+            Session session = service.Get(sessionId);
+
+            if (session.PaymentStatus == "paid")
+            {
+                // Retrieve stored order details
+                var orderJson = TempData["OrderDetails"] as string;
+                if (string.IsNullOrEmpty(orderJson))
+                {
+                    // Handle error scenario (no order details found)
+                    ModelState.AddModelError("", "No order details found, please provide order details first.");
+                    return RedirectToAction("CheckOut");
+                }
+
+                var order = JsonConvert.DeserializeObject<Order>(orderJson);
+
+                // Set order details
+                order.OrderPlaced = DateTime.Now;
+                order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
+
+                // Retrieve shopping cart items
+                var shoppingCartItems = _shoppingCart.GetShoppingCartItems();
+
+                // Create order details
+                order.OrderDetails = shoppingCartItems.Select(item => new OrderDetail
+                {
+                    PieId = item.Pie.PieId,
+                    Amount = item.Amount,
+                    Price = item.Pie.Price
+                }).ToList();
+
+                // Save order to database
+                _orderRepository.CreateOrder(order);
+
+                // Clear temporary data
+                TempData.Remove("OrderDetails");
+
+                // Optionally clear session data or handle session cleanup
+
+                return View();
+            }
+
+            // Handle scenario where payment status is not "paid"
+            return RedirectToAction("CheckoutCancelled");
+        }
+
+        public IActionResult CheckoutCancelled()
+        {
+            ViewBag.CheckoutCancelledMessage = "Your payment was cancelled.";
+            return View();
+        }
+    
+
+    public IActionResult Payment()
         {
             var shoppingCartItems = _shoppingCart.GetShoppingCartItems();
 
             if (shoppingCartItems.Count == 0)
             {
                 // Handle scenario where shopping cart is empty
+                ModelState.AddModelError("", "Your cart is empty, add some pies first");
                 return RedirectToAction("CheckOut");
             }
 
@@ -102,61 +168,5 @@ namespace PieShop.Controllers
             return new StatusCodeResult(303);
         }
 
-
-        [HttpGet]
-        public IActionResult CheckoutComplete()
-        {
-            var sessionId = TempData["Session"].ToString();
-
-            var service = new SessionService();
-            Session session = service.Get(sessionId);
-
-            if (session.PaymentStatus == "paid")
-            {
-                // Retrieve stored order details
-                var order = TempData["OrderDetails"] as Order;
-
-                if (order == null)
-                {
-                    // Handle error scenario (no order details found)
-                    return RedirectToAction("CheckoutCancelled");
-                }
-
-                // Set order details
-                order.OrderPlaced = DateTime.Now;
-                order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
-
-                // Retrieve shopping cart items
-                var shoppingCartItems = _shoppingCart.GetShoppingCartItems();
-
-                // Create order details
-                order.OrderDetails = shoppingCartItems.Select(item => new OrderDetail
-                {
-                    PieId = item.Pie.PieId,
-                    Amount = item.Amount,
-                    Price = item.Pie.Price
-                }).ToList();
-
-                // Save order to database
-                _orderRepository.CreateOrder(order);
-
-                // Clear temporary data
-                TempData.Remove("OrderDetails");
-
-                // Optionally clear session data or handle session cleanup
-
-                return View();
-            }
-
-            // Handle scenario where payment status is not "paid"
-            return RedirectToAction("CheckoutCancelled");
-        }
-
-
-        public IActionResult CheckoutCancelled()
-        {
-            ViewBag.CheckoutCancelledMessage = "Your payment was cancelled.";
-            return View();
-        }
     }
 }
