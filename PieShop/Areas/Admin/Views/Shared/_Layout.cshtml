@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <base href="/" />
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary" aria-label="Bethany's Pie Shop navigation header">
+
+                <a class="nav-link  text-dark" asp-controller="Categories" asp-action="Index"  role="button" aria-haspopup="true" aria-expanded="false">
+                    Categories
+                </a>
+                <a class="nav-link  text-dark" asp-controller="Pies" asp-action="Index" role="button"  aria-haspopup="true" aria-expanded="false">
+                    Pies
+                </a>
+                <a class="nav-link  text-dark" asp-controller="Order" asp-action="Index" role="button" aria-haspopup="true" aria-expanded="false">
+                    Orders
+                </a>
+                        
+       
+            </nav>
+        </header>
+        <div class="container mt-4">
+            @RenderBody()
+            @RenderSection("Scripts", required: false)
+        </div>
+    </div>
+</body>
+</html>
