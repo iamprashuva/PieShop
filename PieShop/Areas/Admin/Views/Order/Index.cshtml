@@ -1,0 +1,68 @@
+﻿@model PieShop.Areas.Admin.ViewModels.OrderViewModel
+
+<h1>Orders</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Order Date</th>
+            <th>Phone number</th>
+            <th>City</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.FirstName</td>
+                <td>@order.LastName</td>
+                <td>@order.OrderPlaced</td>
+                <td>@order.PhoneNumber</td>
+                <td>@order.City</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h1>Order Details</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Amount</th>
+            <th>Order ID</th>
+            <th>Pie ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderDetail in Model.OrderDetails)
+        {
+            <tr>
+                <td>@orderDetail.Amount</td>
+                <td>@orderDetail.OrderId</td>
+                <td>@orderDetail.PieId</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h1>Pie Details</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>PieId</th>
+            <th>PieName</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pie in Model.Pies)
+        {
+            <tr>
+                <td>@pie.PieId</td>
+                <td>@pie.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

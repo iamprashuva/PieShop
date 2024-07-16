@@ -1,0 +1,18 @@
+﻿@model Order
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<button id="checkout-button">Checkout</button>
+
+<script type="text/javascript">
+    var stripe = Stripe('@ViewBag.PublishableKey');
+
+    document.getElementById("checkout-button").addEventListener("click", function () {
+        stripe.redirectToCheckout({
+            sessionId: '@ViewBag.SessionId'
+        }).then(function (result) {
+            
+        });
+    });
+</script>
+
