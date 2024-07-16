@@ -37,6 +37,11 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+// Add authorization policies
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
+});
 
 builder.Services.AddMemoryCache();
 builder.Services.AddMvc();
@@ -59,8 +64,7 @@ app.UseStaticFiles();
 
 app.UseSession();
 app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
+
 
 // Set Stripe API key
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Value;
@@ -90,6 +94,8 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(user, "Admin");
     }
 }
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
